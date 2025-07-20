@@ -1,0 +1,74 @@
+# =========================
+# Backend (Java / Spring)
+# =========================
+
+# Maven build
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# IntelliJ IDEA
+.idea
+*.iws
+*.iml
+*.ipr
+
+# NetBeans
+nbproject/private/
+nbbuild/
+nbdist/
+.nb-gradle/
+build/
+
+# VS Code
+.vscode/
+
+# =========================
+# Frontend (Vue3 / Vite / Pinia / Vuetify / Node.js)
+# =========================
+
+# dependências
+node_modules/
+
+# build / saída de produção
+dist/
+build/
+
+# cache do Vite
+.vite/
+.cache/
+
+# relatórios e caches de teste/linters
+coverage/
+.eslintcache
+.nyc_output/
+
+# arquivos de ambiente locais
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# logs de depuração
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# =========================
+# Comum / Sistema
+# =========================
+
+# OS
+.DS_Store
+Thumbs.db
+
+# docs auxiliares que não versionamos
+HELP.md
