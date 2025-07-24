@@ -9,4 +9,6 @@ public interface GameController {
     ResponseEntity<Object> create(Game game);
     ResponseEntity<Object> getById(String id);
     ResponseEntity<Object> getAll();
+    ResponseEntity<Object> update(String id, Game game);
+    ResponseEntity<Object> delete(String id);
 }

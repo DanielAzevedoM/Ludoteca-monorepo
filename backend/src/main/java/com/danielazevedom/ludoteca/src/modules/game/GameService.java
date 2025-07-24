@@ -30,11 +30,29 @@ public class GameService {
         return gameRepository.save(game);
     }
 
+    public Optional<Game> findById(String id) {
+        return gameRepository.findById(id);
+    }
+
     public List<Game> findAll() {
         return gameRepository.findAll();
     }
 
-    public Optional<Game> findById(String id) {
-        return gameRepository.findById(id);
+    public Game updateGame(String id, Game details) {
+        Game g = gameRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Game not found with id: " + id));
+        g.setName(details.getName());
+        g.setDescription(details.getDescription());
+        g.setCoverImageUrl(details.getCoverImageUrl());
+        // atrelamento obrigatório de categoria
+        String catId = details.getCategory().getId();
+        Category cat = categoryService.findById(catId)
+            .orElseThrow(() -> new IllegalArgumentException("Category not found with id: " + catId));
+        g.setCategory(cat);
+        return gameRepository.save(g);
+    }
+
+    public void deleteGame(String id) {
+        gameRepository.deleteById(id);
     }
 }

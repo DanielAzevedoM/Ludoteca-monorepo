@@ -1,9 +1,9 @@
 import { useAuthStore } from "@/stores/authStore"
 
-export async function getUserData() {
+export async function getGamesData() {
   try {
     const auth = useAuthStore()
-    const response = await fetch('http://localhost:8080/users/me', {
+    const response = await fetch('http://localhost:8080/games', {
       headers: {
         Authorization: `Bearer ${auth.getToken}`,
       },

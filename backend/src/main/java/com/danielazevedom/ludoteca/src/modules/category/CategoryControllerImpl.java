@@ -18,6 +18,7 @@ public class CategoryControllerImpl implements CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    @Override
     @PostMapping
     public ResponseEntity<Object> create(@RequestBody Category category) {
         try {
@@ -29,6 +30,7 @@ public class CategoryControllerImpl implements CategoryController {
         }
     }
 
+    @Override
     @GetMapping("/{id}")
     public ResponseEntity<Object> getById(@PathVariable("id") String id) {
         try {
@@ -45,6 +47,7 @@ public class CategoryControllerImpl implements CategoryController {
         }
     }
 
+    @Override
     @GetMapping
     public ResponseEntity<Object> getAll() {
         try {
@@ -53,6 +56,30 @@ public class CategoryControllerImpl implements CategoryController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro ao listar categorias: " + e.getMessage());
+        }
+    }
+
+    @Override
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> update(@PathVariable("id") String id, @RequestBody Category category) {
+        try {
+            Category updated = categoryService.updateCategory(id, category);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao atualizar categoria: " + e.getMessage());
+        }
+    }
+
+    @Override
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> delete(@PathVariable("id") String id) {
+        try {
+            categoryService.deleteCategory(id);
+            return ResponseEntity.ok("Categoria deletada com sucesso");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao excluir categoria: " + e.getMessage());
         }
     }
 }

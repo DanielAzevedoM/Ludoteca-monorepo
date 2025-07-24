@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { useRouter } from 'vue-router'
 
 /**
  * Pinia store for authentication using sessionStorage for persistence
@@ -19,6 +20,10 @@ export const useAuthStore = defineStore('auth', {
     hasError: (state) => !!state.error,
   },
   actions: {
+    checkIsAuthenticaded(){
+      const router = useRouter()
+      if(!this.isAuthenticated) router.replace({ path: '/', query: {} })
+    },
     /**
      * Redirects to backend OAuth endpoint to start Google login
      */

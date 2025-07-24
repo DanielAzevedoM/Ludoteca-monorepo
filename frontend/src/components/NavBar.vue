@@ -1,4 +1,3 @@
-// MODIFICATION BASED ON: src/components/GlobalHeaderPoman.vue
 <template>
   <v-app-bar
     app
@@ -7,8 +6,6 @@
     class="d-flex align-center pl-4 pr-8"
     style="background-color: #8c0eff;"
   >
-   
-
     <!-- Brand name -->
     <v-toolbar-title class="brand-title ml-2">
       ludoteca
@@ -17,25 +14,37 @@
     <v-spacer />
 
     <!-- Notifications -->
-   
     <v-btn icon class="white--text">
         <v-icon size="20" color="white">mdi-bell</v-icon>
     </v-btn>
-   
-
+  
     <!-- User avatar and name -->
     <v-avatar size="32" class="mr-4">
       <v-img
-        src="https://avatars.githubusercontent.com/u/48658061?s=400&u=bcdb4697c6b445a2909e00ca5c5c5119c9b47a0d&v=4"
+        :src="user.picture"
         alt="User Avatar"
       />
     </v-avatar>
-    <span class="user-name">Daniel Azevêdo</span>
+    <span class="user-name">{{user.name || 'Usuário'}}</span>
   </v-app-bar>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
+import { getUserData } from '@/services/userService';
+
+const user = reactive({
+  name: '',
+  picture: ''
+})
+
+onMounted(async () => {
+  const data = await getUserData()
+  if (data) {
+    user.name = data.name
+    user.picture = data.picture
+  }
+})
 // Hardcoded notification badge count
 const notificationCount = ref(11)
 </script>

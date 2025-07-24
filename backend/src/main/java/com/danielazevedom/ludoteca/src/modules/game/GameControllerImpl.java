@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,4 +64,29 @@ public class GameControllerImpl implements GameController {
                     .body("Erro ao listar games: " + e.getMessage());
         }
     }
+
+    @Override
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> update(@PathVariable("id") String id, @RequestBody Game game) {
+        try {
+            Game updated = gameService.updateGame(id, game);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao atualizar game: " + e.getMessage());
+        }
+    }
+
+    @Override
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> delete(@PathVariable("id") String id) {
+        try {
+            gameService.deleteGame(id);
+            return ResponseEntity.ok("Game deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao excluir game: " + e.getMessage());
+        }
+    }
 }
+

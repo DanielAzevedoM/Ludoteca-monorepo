@@ -27,24 +27,10 @@
 
 <script setup>
 import { onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import loginBg from '@/assets/ludoteca.png'
 
 const auth = useAuthStore()
-const router = useRouter()
-const route = useRoute()
-
-onMounted(() => {
-   if(auth.isAuthenticated) router.replace({ path: '/dashboard', query: {} })
-  // Handle OAuth callback token from URL
-  const token = new URLSearchParams(window.location.search).get('token')
-  if (token) {
-    auth.setAuthToken(token)
-    // Redirect to dashboard after storing token
-    router.replace({ path: '/dashboard', query: {} })
-  }
-})
 
 function onGoogleLogin() {
   auth.loginWithGoogle()

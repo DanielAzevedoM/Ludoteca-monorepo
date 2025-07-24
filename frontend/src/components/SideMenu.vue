@@ -1,105 +1,148 @@
 <template>
-  <v-navigation-drawer
-    app
-    permanent
-    width="208"
-    class="side-menu"
-  >
-    <v-list dense nav>
-      <!-- Dashboard group -->
+  <v-navigation-drawer width="270" permanent>
+    <v-list density="compact">
       <v-list-group
-        v-model="openDashboard"
-        prepend-icon="mdi-clock-outline"
-        no-action
+        v-for="(item, index) in menuState.menuItems"
+        :key="index"
+        v-model="item.expanded"
       >
-        <template #activator>
-          <v-list-item-content>
-            <v-list-item-title>Dashboard</v-list-item-title>
-          </v-list-item-content>
+        <template #activator="{ props }">
+          <v-list-item
+            v-bind="props"
+            :prepend-icon="item.icon"
+            class="custom-button"
+          >
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
         </template>
 
-        <!-- Sub-item: Início -->
-        <v-list-item link>
-          <v-list-item-content>
-            <v-list-item-title>Início</v-list-item-title>
-          </v-list-item-content>
+        <v-list-item
+          v-for="(sub, idx) in item.subitems"
+          :key="idx"
+          :to="sub.link"
+          class="custom-sub-button"
+          :class="{ 'active-subitem': isSubitemActive(sub.link) }"
+        >
+          <v-list-item-title>{{ sub.label }}</v-list-item-title>
         </v-list-item>
       </v-list-group>
-
-      <!-- Usuários -->
-      <v-list-item link>
-        <v-list-item-icon>
-          <v-icon>mdi-account-outline</v-icon>
-        </v-list-item-icon>
-        <v-list-item-title>Usuários</v-list-item-title>
-      </v-list-item>
-
-      <!-- Pedidos -->
-      <v-list-item link>
-        <v-list-item-icon>
-          <v-icon>mdi-clipboard-text-outline</v-icon>
-        </v-list-item-icon>
-        <v-list-item-title>Pedidos</v-list-item-title>
-      </v-list-item>
-
-      <!-- Serviços -->
-      <v-list-item link>
-        <v-list-item-icon>
-          <v-icon>mdi-heart-outline</v-icon>
-        </v-list-item-icon>
-        <v-list-item-title>Serviços</v-list-item-title>
-      </v-list-item>
-
-      <!-- Promoções -->
-      <v-list-item link>
-        <v-list-item-icon>
-          <v-icon>mdi-tag-outline</v-icon>
-        </v-list-item-icon>
-        <v-list-item-title>Promoções</v-list-item-title>
-      </v-list-item>
-
-      <!-- Financeiro -->
-      <v-list-item link>
-        <v-list-item-icon>
-          <v-icon>mdi-currency-usd</v-icon>
-        </v-list-item-icon>
-        <v-list-item-title>Financeiro</v-list-item-title>
-      </v-list-item>
-
-      <!-- Localizações -->
-      <v-list-item link>
-        <v-list-item-icon>
-          <v-icon>mdi-earth</v-icon>
-        </v-list-item-icon>
-        <v-list-item-title>Localizações</v-list-item-title>
-      </v-list-item>
-
-      <!-- Regras de negócio -->
-      <v-list-item link>
-        <v-list-item-icon>
-          <v-icon>mdi-check-circle-outline</v-icon>
-        </v-list-item-icon>
-        <v-list-item-title>Regras de negócio</v-list-item-title>
-      </v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { reactive, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 
-// Control expansion of the Dashboard group
-const openDashboard = ref(true)
+const route = useRoute()
+
+function isSubitemActive(link) {
+  return route.path === link
+}
+
+function isGroupActive(item) {
+  return item.subitems.some(sub => isSubitemActive(sub.link))
+}
+
+const menuState = reactive({
+  menuItems: [
+    {
+      title: 'Dashboard',
+      icon: 'mdi-view-dashboard-outline',
+      expanded: false,
+      subitems: [
+        { label: 'Início', link: '/dashboard/inicio' }
+      ]
+    },
+    {
+      title: 'Usuários',
+      icon: 'mdi-account-outline',
+      expanded: false,
+      subitems: [
+        { label: 'Listar', link: '/usuarios/gerenciar-usuarios' },
+        { label: 'Níveis de acesso', link: '/usuarios/permissoes' }
+      ]
+    },
+    {
+      title: 'Pedidos',
+      icon: 'mdi-clipboard-list-outline',
+      expanded: false,
+      subitems: [
+        { label: 'Novo pedido', link: '/pedidos/novo' },
+        { label: 'Pedidos pendentes', link: '/pedidos/pendentes' },
+        { label: 'Histórico', link: '/pedidos/historico' }
+      ]
+    },
+    {
+      title: 'Games',
+      icon: 'mdi-heart-outline',
+      expanded: false,
+      subitems: [
+        { label: 'Listar', link: '/games/list' },
+        { label: 'Editar games', link: '/games/editar' }
+      ]
+    },
+    {
+      title: 'Promoções',
+      icon: 'mdi-tag-outline',
+      expanded: false,
+      subitems: [
+        { label: 'Nova promoção', link: '/promocoes/nova' },
+        { label: 'Promoções ativas', link: '/promocoes/ativas' }
+      ]
+    },
+    {
+      title: 'Financeiro',
+      icon: 'mdi-cash-multiple',
+      expanded: false,
+      subitems: [
+        { label: 'Receitas', link: '/financeiro/receitas' },
+        { label: 'Despesas', link: '/financeiro/despesas' },
+        { label: 'Relatórios financeiros', link: '/financeiro/relatorios' }
+      ]
+    },
+    {
+      title: 'Localizações',
+      icon: 'mdi-earth',
+      expanded: false,
+      subitems: [
+        { label: 'Gerenciar locais', link: '/localizacoes/gerenciar' },
+        { label: 'Novo local', link: '/localizacoes/novo' }
+      ]
+    },
+    {
+      title: 'Regras de negócio',
+      icon: 'mdi-wrench-outline',
+      expanded: false,
+      subitems: [
+        { label: 'Nova regra', link: '/regras/nova' },
+        { label: 'Editar regras', link: '/regras/editar' }
+      ]
+    },
+  ]
+})
+
+onMounted(() => {
+  menuState.menuItems.forEach(item => {
+    item.expanded = isGroupActive(item)
+  })
+})
 </script>
 
 <style scoped>
-.side-menu {
-  background-color: #ffffff;
-  border-right: 1px solid #e0e0e0;
+.custom-button {
+  height: 40px !important;
+  padding: 0 10px !important;
 }
 
-.v-list-item-title {
-  font-size: 0.875rem;
-  color: #424242;
+.custom-sub-button {
+  height: 36px !important;
+  padding-left: 65px !important;
+  padding-right: 16px !important;
+}
+
+.active-subitem {
+  background-color: #f5f5f5 !important;
+  border-left: 4px solid #8c0eff;
 }
 </style>
