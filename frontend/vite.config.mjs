@@ -1,54 +1,90 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+// Plugins
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import Fonts from 'unplugin-fonts/vite'
 import Layouts from 'vite-plugin-vue-layouts-next'
+import Vue from '@vitejs/plugin-vue'
 import VueRouter from 'unplugin-vue-router/vite'
 import { VueRouterAutoImports } from 'unplugin-vue-router'
-import Vuetify from 'vite-plugin-vuetify'
+import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+
+// Utilities
+import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
 
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
+    VueRouter(),
+    Layouts(),
+    Vue({
+      template: { transformAssetUrls },
+    }),
+    // https://github.com/vuetifyjs/vuetify-loader/tree/master/packages/vite-plugin#readme
+    Vuetify({
+      autoImport: true,
+      styles: {
+        configFile: 'src/styles/settings.scss',
+      },
+    }),
+    Components(),
+    Fonts({
+      google: {
+        families: [{
+          name: 'Roboto',
+          styles: 'wght@100;300;400;500;700;900',
+        }],
+      },
+    }),
     AutoImport({
       imports: [
         'vue',
-        'vue-router',
         VueRouterAutoImports,
-        { 'pinia': ['defineStore'] }
+        {
+          pinia: ['defineStore', 'storeToRefs'],
+        },
       ],
-      dts: 'src/auto-imports.d.ts',
+      eslintrc: {
+        enabled: true,
+      },
+      vueTemplate: true,
     }),
-    Components({
-      dirs: ['src/components'],
-      extensions: ['vue'],
-      dts: 'src/components.d.ts',
-    }),
-    Fonts({
-      google: {
-        families: ['Roboto:100,300,400,500,700,900&display=swap']
-      }
-    }),
-    Layouts(),
-    VueRouter({
-      routesFolder: 'src/pages',
-      importMode: 'async'
-    }),
-    Vuetify({
-      autoImport: true,
-      styles: { configFile: 'src/styles/settings.scss' }
-    })
   ],
+  optimizeDeps: {
+    exclude: [
+      'vuetify',
+      'vue-router',
+      'unplugin-vue-router/runtime',
+      'unplugin-vue-router/data-loaders',
+      'unplugin-vue-router/data-loaders/basic',
+    ],
+  },
+  define: { 'process.env': {} },
   resolve: {
-    alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) }
+    alias: {
+      '@': fileURLToPath(new URL('src', import.meta.url)),
+    },
+    extensions: [
+      '.js',
+      '.json',
+      '.jsx',
+      '.mjs',
+      '.ts',
+      '.tsx',
+      '.vue',
+    ],
+  },
+  server: {
+    port: 3000,
   },
   css: {
     preprocessorOptions: {
-      sass: { quietDeps: true },
-      scss: { quietDeps: true }
-    }
+      sass: {
+        api: 'modern-compiler',
+      },
+      scss: {
+        api: 'modern-compiler',
+      },
+    },
   },
-  server: { port: 3000 }
 })

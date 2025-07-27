@@ -1,68 +1,42 @@
 <template>
-  <v-app-bar
-    app
-    flat
-    height="48"
-    class="d-flex align-center pl-4 pr-8"
-    style="background-color: #8c0eff;"
-  >
-    <!-- Brand name -->
-    <v-toolbar-title class="brand-title ml-2">
-      ludoteca
-    </v-toolbar-title>
+    <v-app-bar  app height="48" class="navbar" flat>
+      <v-container class="pl-4 ma-0">
+        <v-img
+          src="@/assets/poman-logo.png"
+          :width="94.54"
+          :height="48"
+          alt="Logo-Poman"
+        />
+      </v-container>
 
-    <v-spacer />
+      <v-spacer />
 
-    <!-- Notifications -->
-    <v-btn icon class="white--text">
-        <v-icon size="20" color="white">mdi-bell</v-icon>
+  <v-container class="d-flex align-center justify-center" max-width="300" fluid>
+
+    <v-btn icon color="white" class="notification-btn mr-3">
+      <v-icon size="20">mdi-bell-outline</v-icon>
     </v-btn>
-  
-    <!-- User avatar and name -->
-    <v-avatar size="32" class="mr-4">
+
+    <v-avatar :size="32" class="mr-2">
       <v-img
-        :src="user.picture"
-        alt="User Avatar"
+        src="https://avatars.githubusercontent.com/u/48658061?v=4"
+        alt="avatar-icon"
       />
     </v-avatar>
-    <span class="user-name">{{user.name || 'Usuário'}}</span>
+    <h2 class="text-white font-weight-regular user-name pr-2">Daniel Azevêdo</h2>
+  </v-container>
+
   </v-app-bar>
 </template>
 
-<script setup>
-import { ref, reactive } from 'vue'
-import { getUserData } from '@/services/userService';
-
-const user = reactive({
-  name: '',
-  picture: ''
-})
-
-onMounted(async () => {
-  const data = await getUserData()
-  if (data) {
-    user.name = data.name
-    user.picture = data.picture
-  }
-})
-// Hardcoded notification badge count
-const notificationCount = ref(11)
-</script>
-
 <style scoped>
-.brand-title {
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 1rem;
-}
-
-.user-name {
-  color: #ffffff;
-  font-weight: 500;
-  font-size: 0.875rem;
-}
-
-.v-application--wrap > header {
-  z-index: 10;
-}
+  .navbar {
+    background-color: #8637CC !important;
+  }
+  .user-name {
+    font-size: 14px;
+  }
+  .avatar-icon {
+    border-radius: 50%;
+  }
 </style>
